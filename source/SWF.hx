@@ -1,20 +1,20 @@
 package;
 
+import openfl.display.Sprite;
 import openfl.display.Loader;
 import openfl.events.Event;
-import flixel.FlxSprite;
 
 /**
  * A simple SWF loader.
  * @author Joalor64GH
  */
 
-class SWF extends FlxSprite
+class SWF extends Sprite
 {
     private var loader:Loader;
-    private var swfContent:FlxSprite;
+    private var swfContent:Sprite;
     
-    private var callback:Dynamic -> Void;
+    private var callback:Void -> Void;
 
     /**
      * Creates a new instance of the SWF class.
@@ -22,7 +22,7 @@ class SWF extends FlxSprite
      * @param callback The function to be called when the swf is loaded and finished playing.
      */
 
-    public function new(swfPath:String, callback:Dynamic -> Void)
+    public function new(swfPath:String, callback:Void -> Void)
     {
         super();
 
@@ -40,7 +40,7 @@ class SWF extends FlxSprite
 
     private function onLoadComplete(event:Event):Void
     {
-        swfContent = cast(loader.content, FlxSprite);
+        swfContent = cast(loader.content, Sprite);
         loadGraphic(swfContent);
         addEventListener(Event.ENTER_FRAME, checkAnimationComplete);
     }
