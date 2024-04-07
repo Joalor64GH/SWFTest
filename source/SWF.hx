@@ -30,7 +30,7 @@ class SWF extends Sprite
 
         loader = new Loader();
         loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
-        loader.load(new URLRequest(swfPath));
+        loader.load(new openfl.net.URLRequest(swfPath));
     }
 
     /**
@@ -53,7 +53,7 @@ class SWF extends Sprite
     private function checkAnimationComplete(event:Event):Void
     {
         if (swfContent.currentFrame == swfContent.frames) {
-            removeEventListener(EVent.ENTER_FRAME, checkAnimationComplete);
+            removeEventListener(Event.ENTER_FRAME, checkAnimationComplete);
             callback(this);
         }
     }
