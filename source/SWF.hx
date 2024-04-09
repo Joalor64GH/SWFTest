@@ -1,60 +1,81 @@
 package;
 
+import openfl.utils.Assets;
 import openfl.display.Sprite;
-import openfl.display.Loader;
+import openfl.Lib;
 import openfl.events.Event;
+import openfl.display.MovieClip;
 
-/**
- * A simple SWF loader.
- * @author Joalor64GH
- */
+import flixel.FlxG;
+import flixel.sound.FlxSound;
 
 class SWF extends Sprite
 {
-    private var loader:Loader;
-    private var swfContent:Sprite;
-    
-    private var callback:Void -> Void;
+    public var clip:MovieClip;
 
-    /**
-     * Creates a new instance of the SWF class.
-     * @param swfPath The path of the file to load.
-     * @param callback The function to be called when the swf is loaded and finished playing.
-     */
+    private var barLeft:Sprite;
+    private var barRight:Sprite;
 
-    public function new(swfPath:String, callback:Void -> Void)
+    public function new(movieClip:String, sound:String, onComplete:Void->Void):Void
     {
         super();
 
-        this.callback = callback;
+        barLeft = new Sprite();
+        barRight = new Sprite();
 
-        loader = new Loader();
-        loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadComplete);
-        loader.load(new openfl.net.URLRequest(swfPath));
+        var audio:FlxSound = new FlxSound().loadEmbedded(sound);
+        Assets.loadLibrary('$movieClip').onComplete(function(_) {
+            clip = Assets.getMovieClip('$movieClip:');
+            addChild(clip);
+
+            addChild(barLeft);
+            addChild(barRight);
+
+            audio.onComplete = function() {
+                onComplete();
+                removeChild(clip);
+                (cast (Lib.current.getChildAt(0), Main)).removeChild(this);
+            };
+
+            if (audio != null)
+                audio.play();
+        });
+
+        (cast (Lib.current.getChildAt(0), Main)).addChild(this);
+
+        addEventListener(Event.ENTER_FRAME, onResize);
     }
 
     /**
-     * Event handler called when the file finished loading.
-     * @param event The Event object.
+     *  Partly Copied from FlxGame
      */
-
-    private function onLoadComplete(event:Event):Void
+    function onResize(_):Void
     {
-        swfContent = cast(loader.content, Sprite);
-        loadGraphic(swfContent);
-        addEventListener(Event.ENTER_FRAME, checkAnimationComplete);
+        var width:Int = FlxG.stage.stageWidth;
+	    var height:Int = FlxG.stage.stageHeight;
+
+        if (clip != null)
+            width > height ? clip.scaleX = clip.scaleY = height / 720 : clip.scaleY = clip.scaleX = width / 1280;
+
+        screenCenter();
     }
 
-    /**
-     * Event handler called on each frame to check if the animation has finished playing.
-     * @param event The Event object.
-     */
-
-    private function checkAnimationComplete(event:Event):Void
+    public function screenCenter()
     {
-        if (swfContent.currentFrame == swfContent.frames) {
-            removeEventListener(Event.ENTER_FRAME, checkAnimationComplete);
-            callback(this);
-        }
+        var ratio:Float = FlxG.width / FlxG.height;
+	    var realRatio:Float = FlxG.stage.stageWidth / FlxG.stage.stageHeight;
+        var preX:Float = 0;
+
+        preX = Math.floor(FlxG.stage.stageHeight * ratio);
+
+        if (clip != null)
+		    clip.x = Math.ceil((FlxG.stage.stageWidth - preX) * 0.5);
+
+        barLeft.graphics.clear();
+        barRight.graphics.clear();
+        barLeft.graphics.beginFill();
+        barRight.graphics.beginFill();
+        barLeft.graphics.drawRect(0, 0, clip.x, FlxG.stage.stageHeight);
+        barRight.graphics.drawRect(FlxG.stage.stageWidth - clip.x, 0, clip.x, FlxG.stage.stageHeight);
     }
 }

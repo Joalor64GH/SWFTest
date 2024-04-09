@@ -23,7 +23,7 @@ class PlayState extends FlxState
 
         if (FlxG.keys.justPressed.ONE)
         {
-            var nyanCat:SWF = new SWF(Paths.file("images/nyancat.swf"), function() {
+            var nyanCat:SWF = new SWF(Paths.file("images/nyancat.swf"), null, function() {
                 FlxG.camera.fade(FlxColor.BLACK, 0.5, false, FlxG.resetGame, false);
             });
             add(nyanCat);
