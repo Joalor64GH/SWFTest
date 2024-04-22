@@ -25,7 +25,6 @@ class PlayState extends FlxState
             new SWF(Paths.file("images/nyancat.swf"), null, function() {
                 FlxG.camera.fade(FlxColor.BLACK, 0.5, false, FlxG.resetGame, false);
             });
-            add(nyanCat);
         }
     }
 }
