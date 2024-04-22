@@ -4,7 +4,6 @@ import flixel.util.FlxColor;
 import flixel.text.FlxText;
 import flixel.FlxState;
 import flixel.FlxG;
-import SWF;
 
 class PlayState extends FlxState
 {
@@ -23,7 +22,7 @@ class PlayState extends FlxState
 
         if (FlxG.keys.justPressed.ONE)
         {
-            var nyanCat:SWF = new SWF(Paths.file("images/nyancat.swf"), null, function() {
+            new SWF(Paths.file("images/nyancat.swf"), null, function() {
                 FlxG.camera.fade(FlxColor.BLACK, 0.5, false, FlxG.resetGame, false);
             });
             add(nyanCat);

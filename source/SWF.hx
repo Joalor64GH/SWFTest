@@ -9,7 +9,7 @@ import openfl.display.MovieClip;
 import flixel.FlxG;
 import flixel.sound.FlxSound;
 
-class SWF extends flixel.FlxBasic
+class SWF extends Sprite
 {
     public var clip:MovieClip;
 
